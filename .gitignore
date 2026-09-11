@@ -1,0 +1,34 @@
+# Virtual environment
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Test/cache files
+.pytest_cache/
+
+# Ruff
+.ruff_cache/
+
+# SQLite database / local app data
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment variables
+.env
+
+# IDE
+.idea/
+.vscode/
+
+# Build files
+build/
+dist/
+*.egg-info/
+
+# OS files
+.DS_Store
+Thumbs.db

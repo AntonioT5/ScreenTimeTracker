@@ -1,0 +1,23 @@
+[project]
+name = "usage-tracker-agent"
+version = "0.1.0"
+description = "Local tracking agent that logs per-app usage time"
+requires-python = ">=3.11"
+dependencies = [
+    "pywin32>=306",
+    "psutil>=5.9",
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
