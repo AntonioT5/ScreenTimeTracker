@@ -2,6 +2,12 @@
 .venv/
 venv/
 
+# .NET
+backend/**/bin/
+backend/**/obj/
+*.user
+backend/Web/appsettings.Development.json
+
 # Python cache
 __pycache__/
 *.py[cod]

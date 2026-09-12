@@ -56,10 +56,9 @@ def get_unsynced_sessions() -> list[StoredSession]:
     conn = _get_connection()
 
     try:
-        rows = conn.execute("""
-                            "SELECT id, process_name, window_title, start_time, end_time"
+        rows = conn.execute("SELECT id, process_name, window_title, start_time, end_time "
                             "FROM sessions WHERE synced=0 ORDER BY start_time"
-        """).fetchall()
+        ).fetchall()
         
         return [StoredSession(
                 id=row[0],
