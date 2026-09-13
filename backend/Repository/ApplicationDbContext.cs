@@ -33,6 +33,10 @@ namespace Repository
             modelBuilder.Entity<Device>()
                 .HasIndex(d => d.ApiKey)
                 .IsUnique();
+
+            modelBuilder.Entity<AppSession>()
+                .HasIndex(a => new {a.DeviceId, a.StartTime})
+                .IsUnique();
         }
     }
 }

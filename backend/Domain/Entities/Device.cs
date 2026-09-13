@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Common;
 
 namespace Domain.Entities
 {
-    public class Device
+    public class Device : BaseEntity
     {
-        public Guid Id { get; set; }
         public string DeviceName { get; set; } = string.Empty;
         public string OperatingSystem { get; set; } = string.Empty;
         public string ApiKey { get; set; } = string.Empty;

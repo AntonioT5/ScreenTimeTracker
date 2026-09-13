@@ -1,6 +1,7 @@
 import logging
 
 import requests
+from datetime import timezone
 
 from tracker.config import API_BASE_URL, DEVICE_API_KEY
 from tracker.storage import StoredSession, get_unsynced_sessions, mark_synced
@@ -12,8 +13,8 @@ def _session_to_payload(session: StoredSession) -> dict:
     return {
         "processName": session.process_name,
         "windowTitle": session.window_title,
-        "startTime": session.start_time.isoformat(),
-        "endTime": session.end_time.isoformat(),
+        "startTime": session.start_time.astimezone(timezone.utc).isoformat(),
+        "endTime": session.end_time.astimezone(timezone.utc).isoformat(),
     }
 
 def sync_pending_sessions() -> int:
@@ -32,6 +33,7 @@ def sync_pending_sessions() -> int:
             headers=headers,
             timeout=10,
         )
+        response.raise_for_status()
     except requests.RequestException:
         logger.warning("Sync failed, will retry next cycle", exc_info=True)
         return 0

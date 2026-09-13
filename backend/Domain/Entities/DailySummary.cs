@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Common;
 
 namespace Domain.Entities
 {
-    public class DailySummary
+    public class DailySummary : BaseEntity
     {
-        public Guid Id { get; set; }
         public DateOnly Date { get; set; }
         public string ProcessName { get; set; } = string.Empty;
         public int DurationSeconds { get; set; }

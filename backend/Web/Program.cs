@@ -1,11 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using Repository;
+using Repository.Implementation;
+using Repository.Interface;
+using Service.Implementation;
+using Service.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// Service and Respository
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IAppSessionService, AppSessionService>();
+
+//controllers
+builder.Services.AddControllers();  
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
      options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -18,6 +29,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.MapControllers();
 app.UseHttpsRedirection();
 
 var summaries = new[]
