@@ -5,6 +5,7 @@ from datetime import timezone
 
 from tracker.config import API_BASE_URL, DEVICE_API_KEY
 from tracker.storage import StoredSession, get_unsynced_sessions, mark_synced
+from tracker.devices import get_saved_api_key
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +25,7 @@ def sync_pending_sessions() -> int:
         return 0
 
     payload = {"sessions": [_session_to_payload(s) for s in pending]}
-    headers = {"Authorization": f"Bearer {DEVICE_API_KEY}"}
+    headers = {"Authorization": f"Bearer {get_saved_api_key()}"}
 
     try:
         response = requests.post(

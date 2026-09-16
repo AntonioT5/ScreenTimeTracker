@@ -4,6 +4,8 @@ import time
 from tracker.session_tracker import SessionTracker
 from tracker.storage import save_session
 from tracker.sync import sync_pending_sessions
+from tracker.config import API_BASE_URL
+from tracker.devices import ensure_device_registered
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -11,6 +13,7 @@ logger = logging.getLogger(__name__)
 SYNC_INTERVAL_SECONDS = 60 
 
 def main():
+    api_key = ensure_device_registered()
     tracker = SessionTracker()
     last_sync_time = time.monotonic()
 
