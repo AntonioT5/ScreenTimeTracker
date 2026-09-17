@@ -18,7 +18,7 @@ namespace Web.Controller
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] int? days)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
             if (userIdClaim is null || !Guid.TryParse(userIdClaim.Value, out var userId))
@@ -26,7 +26,7 @@ namespace Web.Controller
                 return Unauthorized("Invalid token.");
             }
 
-            var result = await _service.GetSummaryAsync(userId);
+            var result = await _service.GetSummaryAsync(userId, days);
             return Ok(result);
         }
     }

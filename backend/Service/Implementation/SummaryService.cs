@@ -18,10 +18,12 @@ namespace Service.Implementation
             _sessionRepository = sessionRepository;
         }
 
-        public async Task<SummaryResponse> GetSummaryAsync(Guid userId)
+        public async Task<SummaryResponse> GetSummaryAsync(Guid userId, int? days)
         {
-           var raw = await _sessionRepository.GetAllAsync(
-            selector: s => new
+            DateTime? passDays = days.HasValue ? DateTime.UtcNow.AddDays(-days.Value) : null;
+        
+            var raw = await _sessionRepository.GetAllAsync(
+                selector: s => new
                 {
                     s.DeviceId,
                     DeviceName = s.Device.DeviceName,
@@ -29,16 +31,18 @@ namespace Service.Implementation
                     s.StartTime,
                     s.EndTime
                 },
-                predicate: u => u.Device.UserId == userId
-           );
+                predicate: passDays.HasValue
+                    ? s => s.Device.UserId == userId && s.StartTime >= passDays.Value
+                    : s => s.Device.UserId == userId
+            );
 
-           var withDuration = raw.Select(s => new
-            {
-                s.DeviceId,
-                s.DeviceName,
-                s.ProcessName,
-                DurationSeconds = (int)(s.EndTime - s.StartTime).TotalSeconds
-            }).ToList();
+            var withDuration = raw.Select(s => new
+                {
+                    s.DeviceId,
+                    s.DeviceName,
+                    s.ProcessName,
+                    DurationSeconds = (int)(s.EndTime - s.StartTime).TotalSeconds
+                }).ToList();
 
             var overall = withDuration.GroupBy(s=>s.ProcessName)
                 .Select(p => new AppUsageDto
@@ -64,7 +68,6 @@ namespace Service.Implementation
                         .ToList()
                 })
                 .ToList();
-
             return new SummaryResponse { Overall = overall, ByDevice = byDevice };
         }
     }

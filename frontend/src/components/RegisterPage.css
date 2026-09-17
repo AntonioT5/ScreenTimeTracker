@@ -1,0 +1,138 @@
+.register-container{
+    width: 900px;
+    min-height: 620px;
+    max-width: 95vw;
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(13, 27, 42, 0.12);
+    overflow: hidden;
+    margin: 20px auto;
+}
+
+.register-left{
+    flex: 1;
+    background: linear-gradient(135deg, var(--ink-black) 0%, var(--prussian-blue) 100%);
+    color: var(--alabaster-grey);
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+.register-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: rgba(119, 141, 169, 0.2);
+  color: var(--lavender-grey);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.register-right h1 {
+  font-size: 30px;
+  line-height: 1.3;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+.register-description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--lavender-grey);
+  margin-bottom: 14px;
+}
+
+.register-rigth{
+    flex:1.5;
+    padding: 48px 40px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.register-brand-header{
+  display: flex;
+  justify-content: flex-end;
+  align-items: right;
+  gap: 10px;
+}
+
+.register-brand-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink-black);
+}
+
+.register-form-wrapper h3 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 6px;
+}
+
+.register-subtitle {
+  font-size: 14px;
+  color: var(--dusk-blue);
+  margin-bottom: 28px;
+}
+
+.register-input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.register-input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--prussian-blue);
+  margin-bottom: 6px;
+}
+.register-input-group input {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--alabaster-grey);
+  font-size: 14px;
+  background-color: #fafafa;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.register-input-group input:focus {
+  border-color: var(--dusk-blue);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(65, 90, 119, 0.15);
+}
+
+.register-btn-primary {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--prussian-blue);
+  color: var(--alabaster-grey);
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.register-btn-primary:hover {
+  background-color: var(--ink-black);
+}
+
+.register-toggle-text {
+  font-size: 13px;
+  text-align: center;
+  color: var(--dusk-blue);
+  margin-top: 20px;
+}
+
+.register-toggle-text a {
+  color: var(--prussian-blue);
+  font-weight: 600;
+  text-decoration: none;
+}

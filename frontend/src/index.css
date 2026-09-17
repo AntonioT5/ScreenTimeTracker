@@ -1,0 +1,27 @@
+:root{
+  --ink-black: #0D1B2A;
+  --prussian-blue: #1B263B;
+  --dusk-blue: #415A77;
+  --lavender-grey: #778DA9;
+  --alabaster-grey: #E0E1DD;
+
+  --font-family: 'Inter', sans-serif;
+}
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body{
+  font-family: var(--font-family);
+  background-color: #f4f5f7;
+  color: #1a1a1a;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#root{
+  width: 100%;
+}
