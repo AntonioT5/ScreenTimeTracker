@@ -1,58 +1,196 @@
 .dashboard-container{
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    height: 100vh;
+    overflow: hidden;
 }
+
 .header-dashboard{
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100vw;
-    height: 3.5vw;
-    padding: 5px 20px;
-    background-color: var(--prussian-blue);
+    flex:0.2;
+    width: 18vw;
+    height: 100vh;
+    min-width: 180px;
+    background: linear-gradient(180deg, var(--prussian-blue), var(--ink-black));
+    box-shadow: 4px 0 20px rgba(13, 27, 42, 0.25);
+}
+
+.header-dashboard{
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-card{
+    margin-top: 30px;
+    margin-left: 20px;
+    font-size: 18px;
+    font-weight: 700;
     color: var(--alabaster-grey);
 }
-.left-part{
+
+.profile-details{
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    gap: 20px;
     align-items: center;
-    gap: 15px;
-    transition: all 0.5s ease;
+    margin-bottom: 1em;
 }
-.profile-picture{
+
+.profile-img{
     background-color: var(--alabaster-grey);
-    width: 30px;
-    height: 30px;
-    border-radius: 50px;
-    margin: 0;
-    align-items: center;
     color: var(--prussian-blue);
+    width: 35px;
+    height: 35px;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 50px;
+}
+
+.profile-details p {
+    font-weight: 800;
     transition: all 0.5s ease;
 }
-.left-part::content{
+
+.profile-details p:hover{
     color: var(--lavender-grey);
 }
-.profile-picture:hover{
-    background-color: var(--lavender-grey);
-}
-.center-part{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-}
-.center-part a{
+
+.settings-card a{
+    display: block;
+    text-decoration: none;
+    padding: 2px 14px; 
+    font-size: 18px;
+    font-weight: 700;
     color: var(--alabaster-grey);
-    text-decoration: none;
     transition: all 0.5s ease;
 }
-.center-part a:hover{
+
+.settings-card a:hover{
     color: var(--lavender-grey);
-    text-decoration: none;
 }
+
+.settings-card.active a{
+    color: var(--dusk-blue);
+}
+
+.main-eary{
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    flex: 1;
+    min-width: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+.text{
+    margin-bottom: 20px;
+    color: var(--ink-black);
+}
+.text h2{
+    font-size: 25px;
+    font-weight: 900;
+}
+.text h3{
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.row-1{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+}
+.block-element{
+    margin-top: 2em;
+    width: 15em;
+    height: 10em;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(13, 27, 42, 0.16);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.5s ease;
+    color: var(--ink-black);
+}
+.block-element:hover{
+    box-shadow: 3px 5px 10px var(--dusk-blue);
+}
+.block-element p:first-child{
+    font-size: 15px;
+    font-weight: bold;
+}
+.block-element p:last-child{
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.row-2{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 2em;
+}
+
+.app-usage,
+.pie-card{
+    flex: 1 1 320px;
+    box-shadow: 0 4px 20px rgba(13, 27, 42, 0.16);
+    border-radius: 14px;
+    padding: 14px;
+    color: var(--ink-black);
+}
+
+.card-title{
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+.app-row{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+.app-rank { flex-shrink: 0; 
+    width: 28px; 
+    height: 28px; 
+    border-radius: 50%; 
+    background-color: var(--alabaster-grey); 
+    color: var(--prussian-blue); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    font-size: 13px; 
+    font-weight: 700; 
+}
+.app-info { 
+    flex: 1; 
+}
+
+.app-line { display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 6px; 
+    font-size: 14px; 
+}
+
+.app-name { 
+    font-weight: 600; 
+}
+
+.app-time { 
+    color: var(--dusk-blue); 
+    font-weight: 600; 
+}
+
+.bar-track { height: 8px;
+    background-color: #e9edf2; 
+    border-radius: 99px; 
+    overflow: hidden; 
+} 
+.bar-fill { height: 100%; 
+    border-radius: 99px; 
+    transition: width 0.5s ease; }
 

@@ -14,7 +14,7 @@ export default function App(){
   };
 
   return (<>
-        {view === 'login' && (
+        {/* {view === 'login' && (
           <LoginPage onSwitchToRegister={() => setView('register')} onSwitchToDashboard={() => setView('dashboard')}/>
         )}
 
@@ -24,6 +24,8 @@ export default function App(){
 
         {view === 'dashboard' && (
           <Dashboard onLogout={handleLogout}/>
-        )}
+        )} */}
+
+        <Dashboard/>
   </>);
 } 
