@@ -45,6 +45,13 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IDeviceService, DeviceService>();
 builder.Services.AddScoped<ISummaryService, SummaryService>();
 
+//vite Connect
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+        policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod());
+});
+
 //controllers
 builder.Services.AddControllers() 
     .AddJsonOptions(options =>
@@ -65,6 +72,9 @@ if (app.Environment.IsDevelopment())
 
 app.MapControllers();
 app.UseHttpsRedirection();
+
+//Vite
+app.UseCors("AllowFrontend");
 
 //Auth
 app.UseAuthentication();
