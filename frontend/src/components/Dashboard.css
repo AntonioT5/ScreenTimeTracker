@@ -54,7 +54,7 @@
     color: var(--lavender-grey);
 }
 
-.settings-card a{
+.settings-card span, .settings-card a{
     display: block;
     text-decoration: none;
     padding: 2px 14px; 
@@ -62,13 +62,14 @@
     font-weight: 700;
     color: var(--alabaster-grey);
     transition: all 0.5s ease;
+    cursor: pointer;
 }
 
-.settings-card a:hover{
+.settings-card span:hover, .settings-card a:hover{
     color: var(--lavender-grey);
 }
 
-.settings-card.active a{
+.settings-card.active a, .settings-card.active span{
     color: var(--dusk-blue);
 }
 
@@ -178,6 +179,7 @@
 
 .app-name { 
     font-weight: 600; 
+    text-transform: capitalize;
 }
 
 .app-time { 

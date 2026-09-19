@@ -53,6 +53,8 @@ namespace Service.Implementation
                 .OrderByDescending(s=>s.DurationSeconds)
                 .ToList();
 
+            var totalTimeSpend = withDuration.Sum(s=> (long)s.DurationSeconds);
+
             var byDevice = withDuration.GroupBy(s=> new { s.DeviceId, s.DeviceName })
                 .Select(g => new DeviceSummaryDto
                 {
@@ -68,7 +70,7 @@ namespace Service.Implementation
                         .ToList()
                 })
                 .ToList();
-            return new SummaryResponse { Overall = overall, ByDevice = byDevice };
+            return new SummaryResponse { Overall = overall, ByDevice = byDevice, TotalTimeSpend=totalTimeSpend };
         }
     }
 }

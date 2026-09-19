@@ -22,5 +22,6 @@ namespace Service.DTOs.RequestResponse
     {
         public List<AppUsageDto> Overall { get; set; } = new();
         public List<DeviceSummaryDto> ByDevice { get; set; } = new();
+        public long TotalTimeSpend { get; set; }
     }
 }
