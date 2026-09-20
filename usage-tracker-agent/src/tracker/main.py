@@ -5,12 +5,12 @@ from tracker.session_tracker import SessionTracker
 from tracker.storage import save_session
 from tracker.sync import sync_pending_sessions
 from tracker.config import API_BASE_URL
-from tracker.devices import ensure_device_registered
+from tracker.devices import ensure_device_registered, key_valid, unlink_device
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-SYNC_INTERVAL_SECONDS = 60 
+SYNC_INTERVAL_SECONDS = 15 
 
 def main():
     api_key = ensure_device_registered()
@@ -28,6 +28,13 @@ def main():
         now = time.monotonic()
 
         if now - last_sync_time >= SYNC_INTERVAL_SECONDS:
+            if key_valid(api_key) is False:
+                logger.warning("This device was signed out!")
+                unlink_device()
+                api_key = ensure_device_registered()
+                last_sync_time = time.monotonic()
+                continue
+
             synced_count = sync_pending_sessions()
             if synced_count:
                 logger.info(f"Synced {synced_count} sessions")

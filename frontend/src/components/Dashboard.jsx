@@ -89,7 +89,7 @@ export default function Dashboard({ onLogout }){
                 </div>
 
                 <div className='settings-card'>
-                    <button onClick={onLogout}>Log out</button>
+                    <button onClick={onLogout} className='btn-logout-dashboard'>Log out</button>
                 </div>
             </div>
 

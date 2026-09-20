@@ -13,5 +13,8 @@ namespace Service.Interface
         PendingDeviceInfo? GetPendingInfo(string code);
         Task<bool> ClaimPendingAsync(Guid userId, string code);
         (bool Found, string? ApiKey) PollPending(string code);
+        Task<bool> IsKeyAwaizble(string ApiKey);
+
+        Task UnLinkDevice(Guid userId, string DeviceName);
     }
 }

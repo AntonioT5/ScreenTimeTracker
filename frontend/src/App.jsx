@@ -2,18 +2,35 @@ import LoginPage from "./components/LoginPage";
 import RegisterPage from "./components/RegisterPage";
 import Dashboard from "./components/Dashboard";
 import AddDevice from "./components/AddDevice";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+
+const ApiBackendBase = 'http://localhost:5027/api';
 
 export default function App(){
 
   const [view, setView] = useState(() => localStorage.getItem('authToken') ? 'dashboard' : 'login');
   const [pendingCode, setPendingCode] = useState(() => new URLSearchParams(window.location.search).get('addDevice'));
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(async () => {
+    const token = localStorage.getItem('authToken');
+    const deviceName = localStorage.getItem('deviceName');
+
+    await fetch(`${ApiBackendBase}/devices/unlink`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': `application/json`,
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        'DeviceName': deviceName,
+      })
+    })
+
     localStorage.removeItem('authToken');
     localStorage.removeItem('authUsername');
+    localStorage.removeItem('deviceName')
     setView('login');
-  };
+  }, []);
 
   const finishAddDevice = () => {
     setPendingCode(null);

@@ -29,4 +29,14 @@ namespace Service.DTOs.RequestResponse
         public string DeviceName { get; set; } = "";
         public string OperatingSystem { get; set; } = "";
     }
+
+    public class CheckKeyRequest
+    {
+        public string ApiKey { get; set; } = string.Empty;
+    }
+
+    public class UnLinkDeviceRequest
+    {
+        public string DeviceName { get; set; } = string.Empty;
+    }
 }

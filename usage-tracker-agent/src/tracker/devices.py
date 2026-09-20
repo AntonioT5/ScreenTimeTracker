@@ -32,6 +32,24 @@ def _save_api_key(api_key: str) -> None:
     DEVICE_CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
     DEVICE_CONFIG_PATH.write_text(json.dumps({"api_key": api_key}))
 
+def key_valid(api_key: str) -> bool | None:
+    try:
+        response = requests.post(
+            f"{API_BASE_URL}/api/devices/check-key",
+            json={"apiKey": api_key},
+            timeout=10,
+        )
+    except requests.RequestException:
+        return None
+
+    if response.status_code == 204:
+        return True
+    if response.status_code == 401:
+        return False
+    return None
+
+def unlink_device() -> None:
+    DEVICE_CONFIG_PATH.unlink(missing_ok=True)
 
 def ensure_device_registered() -> str:
     existing_key = get_saved_api_key()

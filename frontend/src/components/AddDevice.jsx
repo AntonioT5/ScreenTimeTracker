@@ -24,7 +24,6 @@ export default function AddDevice({ code, onDone, onLogout }) {
                     setStatus('error');
                     return;
                 }
-
                 setInfo(await response.json());
                 setStatus('ready');
             } catch {
@@ -51,7 +50,12 @@ export default function AddDevice({ code, onDone, onLogout }) {
                 onLogout();
                 return;
             }
-            setStatus(response.ok ? 'done' : 'error');
+            if (response.ok) {
+                localStorage.setItem('deviceName', info.deviceName);
+                setStatus('done');
+            } else {
+                setStatus('error');
+            }
         } catch {
             setStatus('error');
         }

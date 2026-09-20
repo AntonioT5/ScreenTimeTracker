@@ -151,5 +151,38 @@ namespace Service.Implementation
             _cache.Remove($"pending-device:{code}");
             return (true, pending.ApiKey);
         }
+
+        public async Task<bool> IsKeyAwaizble(string ApiKey)
+        {
+            if (string.IsNullOrWhiteSpace(ApiKey))
+            {
+                return false;
+            }
+
+            var device = await _repository.Get(
+                selector: x=>x,
+                predicate:x=>x.ApiKey==ApiKey
+            );
+
+            return device is not null;
+
+        }
+
+        public async Task UnLinkDevice(Guid userId, string DeviceName)
+        {
+            var device = await _repository.Get(
+                selector: x=> x,
+                predicate: x=> x.DeviceName==DeviceName && x.UserId==userId
+            );
+
+            if (device == null)
+            {
+                return;
+            }
+
+            device.ApiKey = GenerateApiKey();
+
+            await _repository.UpdateAsync(device);
+        }
     }
 }

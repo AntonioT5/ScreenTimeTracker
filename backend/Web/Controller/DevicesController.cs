@@ -90,5 +90,27 @@ namespace Web.Controller
             var ok = await _service.ClaimPendingAsync(userId, request.Code);
             return ok ? NoContent() : NotFound();
         }
+
+        [HttpPost("check-key")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckKey([FromBody] CheckKeyRequest request)
+        {
+            var flag = await _service.IsKeyAwaizble(request.ApiKey);
+
+            return flag ? NoContent() : Unauthorized();
+        }
+
+        [HttpPost("unlink")]
+        [Authorize]
+        public async Task<IActionResult> UnLink([FromBody] UnLinkDeviceRequest request)
+        {
+            var userIndetifier = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub");
+            if(!Guid.TryParse(userIndetifier, out var userId))
+            {
+                return Unauthorized();
+            }
+            await _service.UnLinkDevice(userId, request.DeviceName);
+            return NoContent();
+        }
     }
 }
