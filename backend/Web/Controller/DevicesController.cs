@@ -35,5 +35,60 @@ namespace Web.Controller
                 return Unauthorized(ex.Message);
             }
         }
+
+        [HttpPost("pending")]
+        [AllowAnonymous]
+        public IActionResult CreatePending([FromBody] PendingDeviceRequest request)
+        {
+            try
+            {
+                _service.CreatePending(request);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("pending/{code}")]
+        [AllowAnonymous]
+        public IActionResult PollPending(string code)
+        {
+            var (found, apiKey) = _service.PollPending(code);
+
+            if (!found)
+            {
+                return NotFound();
+            }
+            if (apiKey is null)
+            {
+                return NoContent();
+            }
+
+            return Ok(new { apiKey });
+        }
+
+        [HttpGet("pending/{code}/info")]
+        [Authorize]
+        public IActionResult GetPendingInfo(string code)
+        {
+            var info = _service.GetPendingInfo(code);
+            return info is null ? NotFound() : Ok(info);
+        }
+
+        [HttpPost("claim")]
+        [Authorize]
+        public async Task<IActionResult> Claim([FromBody] ClaimDeviceRequest request)
+        {
+            var userIdText = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub");
+            if (!Guid.TryParse(userIdText, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            var ok = await _service.ClaimPendingAsync(userId, request.Code);
+            return ok ? NoContent() : NotFound();
+        }
     }
 }

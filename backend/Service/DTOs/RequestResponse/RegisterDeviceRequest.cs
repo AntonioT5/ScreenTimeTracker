@@ -12,4 +12,21 @@ namespace Service.DTOs.RequestResponse
         public string DeviceName { get; set; } = string.Empty;
         public string OperatingSystem { get; set; } = string.Empty;
     }
+    public class PendingDeviceRequest
+    {
+        public string Code { get; set; } = "";
+        public string DeviceName { get; set; } = "";
+        public string OperatingSystem { get; set; } = "";
+    }
+
+    public class ClaimDeviceRequest
+    {
+        public string Code { get; set; } = "";
+    }
+
+    public class PendingDeviceInfo
+    {
+        public string DeviceName { get; set; } = "";
+        public string OperatingSystem { get; set; } = "";
+    }
 }
