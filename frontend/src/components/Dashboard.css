@@ -211,3 +211,83 @@
     background-color: var(--dusk-blue);
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.218);
 }
+
+.model{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 100;
+}
+
+.model > div{
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.model p {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink-black);
+    margin: 0 0 10px 0;
+}
+.buttons-area{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+.model-device{
+    position: fixed;
+    height: 100vh;
+    width: 100vW;
+
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.model-device > div{
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    min-width: 700px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+.model-device > div > p:first-child {
+    font-weight: 600;
+}
+.device-name-layer{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 10px;
+    border: 1px solid var(--alabaster-grey);
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.218);
+    border-radius: 15px;
+    transition: all 0.5s ease;
+    cursor: default;
+}
+
+.device-name-layer:hover{
+    background-color: var(--lavender-grey);
+    border: 1px solid var(--lavender-grey);;
+    box-shadow: 8px 8px 5px rgba(0, 0, 0, 0.218);
+}
+.clickable{
+    cursor: pointer;
+}

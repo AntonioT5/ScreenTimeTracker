@@ -8,6 +8,8 @@ export default function Dashboard({ onLogout }){
     const [error, setError] = useState('');
     const username = localStorage.getItem('authUsername') || 'User';
     const [days, setDays] = useState(1);
+    const [logoutFlag, setLogoutFlag] = useState(false);
+    const [deviceFlag, setDeviceFlag] = useState(false);
 
     const ApiBackendBase = 'http://localhost:5027/api'
     const token = localStorage.getItem('authToken')
@@ -44,6 +46,7 @@ export default function Dashboard({ onLogout }){
         loadSummary();
     }, [token, onLogout, days])
 
+
     if (!summary) {
         return <div className="dashboard-container">Loading...</div>;
     }
@@ -57,6 +60,7 @@ export default function Dashboard({ onLogout }){
 
         return `${hours}:${formattedMinutes}`
     } 
+
 
     return(
         <div className="dashboard-container">
@@ -85,11 +89,15 @@ export default function Dashboard({ onLogout }){
                 </div>
 
                 <div className='settings-card'>
+                    <span>Devices</span>
+                </div>
+
+                <div className='settings-card'>
                     <a  href=''>Predictions</a>
                 </div>
 
                 <div className='settings-card'>
-                    <button onClick={onLogout} className='btn-logout-dashboard'>Log out</button>
+                    <button onClick={() => {setLogoutFlag(true)}} className='btn-logout-dashboard'>Log out</button>
                 </div>
             </div>
 
@@ -108,7 +116,7 @@ export default function Dashboard({ onLogout }){
                         <p>How much app</p>
                         <p>{summary.overall.length}</p>
                     </div>
-                    <div className='block-element'>
+                    <div className='block-element clickable' onClick={() => setDeviceFlag(true)}>
                         <p>How many devices</p>
                         <p>{summary.byDevice.length}</p>
                     </div>
@@ -138,6 +146,51 @@ export default function Dashboard({ onLogout }){
                                     </div>
                                 </div>)
                             }))}
+                    </div>
+                </div>
+            </div>
+            
+            <div style={{display: logoutFlag ? 'flex' : 'none'}}  className='model' onClick={() => setLogoutFlag(false)}>
+                <div onClick={(e) => e.stopPropagation()}>
+                    <p>Are You Sure?</p>
+                    <div className='buttons-area'>
+                        <button onClick={onLogout} className='btn-logout-dashboard'>Yes</button>
+                        <button onClick={() => {setLogoutFlag(false)}} className='btn-logout-dashboard'>No</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style={{display: deviceFlag ? 'flex' : 'none'}} className='model-device' onClick={() => setDeviceFlag(false)}>
+                <div onClick={(e) => e.stopPropagation()}>
+                    {summary.overall.length === 0 ? (
+                        <p>
+                            You didn't add a device
+                        </p>
+                    ) : (
+                        <>
+                            <p>Your Added Devices</p>
+
+                            {summary.byDevice.map((d, i) => {
+
+                                const timeSpent = d.apps.reduce((sum, app) => {
+                                    return sum + app.durationSeconds;
+                                }, 0);
+
+                                return (
+                                    <div className='device-name-layer' key={i}>
+                                        <p>{d.deviceName}</p>
+                                        <p>{convertTime(timeSpent)}</p>
+                                    </div>
+                                );
+                            })}
+                        </>
+                    )}
+
+                    <div>
+                        <button
+                            onClick={() => setDeviceFlag(false)} className='btn-logout-dashboard'>
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>

@@ -51,7 +51,11 @@ export default function App(){
         )}
 
         {view === 'dashboard' && !pendingCode && (
-          <Dashboard onLogout={handleLogout}/>
+          <Dashboard onLogout={handleLogout} onClickDevice={() => {setView('device')}}/>
+        )}
+
+        {view === 'device' && (
+          <Dashboard onClickDashboard={() => {setView('dashboard')}}/>
         )}
   </>);
 }
