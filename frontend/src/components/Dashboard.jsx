@@ -89,10 +89,6 @@ export default function Dashboard({ onLogout }){
                 </div>
 
                 <div className='settings-card'>
-                    <span>Devices</span>
-                </div>
-
-                <div className='settings-card'>
                     <a  href=''>Predictions</a>
                 </div>
 
