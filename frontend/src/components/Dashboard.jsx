@@ -2,14 +2,21 @@ import { useEffect, useState } from 'react';
 import { authFetch } from '../api_JWTToken/api';
 import './Dashboard.css';
 
-export default function Dashboard({ onLogout }){
+export default function Dashboard({ onLogout, onEditChanges }){
 
     const [summary, setSummary] = useState(null);
     const [error, setError] = useState('');
+
     const username = localStorage.getItem('authUsername') || 'User';
+    const mail = localStorage.getItem('authMail')
+    const [editUsername, setEditUsername] = useState(username);
+    const [editMail, setEditMail] = useState(mail);
+
     const [days, setDays] = useState(1);
     const [logoutFlag, setLogoutFlag] = useState(false);
     const [deviceFlag, setDeviceFlag] = useState(false);
+    const [userModel, setUserModel] = useState(false);
+    const [editError, setEditError] = useState('');
 
     const ApiBackendBase = 'http://localhost:5027/api'
     const token = localStorage.getItem('authToken')
@@ -27,6 +34,7 @@ export default function Dashboard({ onLogout }){
                 if (response.status === 401) {
                     localStorage.removeItem('authToken');
                     localStorage.removeItem('authUsername');
+                    localStorage.removeItem('authMail');
                     throw new Error('Session expired. Please log in again.');
                 }
 
@@ -72,7 +80,7 @@ export default function Dashboard({ onLogout }){
                         <div className='profile-img'>
                             <p>{username.charAt(0).toUpperCase()}</p>
                         </div>
-                        <p>{username}</p>
+                        <p onClick={() => setUserModel(true)}>{username}</p>
                     </div>
                 </div>
                 
@@ -152,6 +160,39 @@ export default function Dashboard({ onLogout }){
                     <div className='buttons-area'>
                         <button onClick={onLogout} className='btn-logout-dashboard'>Yes</button>
                         <button onClick={() => {setLogoutFlag(false)}} className='btn-logout-dashboard'>No</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style={{display: userModel ? 'flex' : 'none'}}  className='model-user' onClick={() => setUserModel(false)}>
+                <div onClick={(e) => e.stopPropagation()}>
+                    <p>Edit Your Account</p>
+                    {editError && <p className='form-error'>{editError}</p>}
+                    <div className='edit-model'>
+                        <div className='edit-inputs'>
+                            <p>Username</p>
+                            <input type="text" value={editUsername} onChange={(e) => setEditUsername(e.target.value)} />
+                        </div>
+                        <div className='edit-inputs'>
+                            <p>Mail</p>
+                            <input type="email" value={editMail} onChange={(e) => setEditMail(e.target.value)}/>
+                        </div>
+                            
+                    </div>
+                    <div className='buttons-area'>
+                        <button onClick={async () => {
+                            setEditError('');
+                            try {
+                                await onEditChanges(editUsername, editMail);
+                                setUserModel(false);
+                            } catch (err) {
+                                setEditError(err.message);
+                                setEditMail(mail);
+                                setEditUsername(username);
+                            }
+                            }}
+                            className='btn-logout-dashboard btn-large'>Save Changes</button>
+                        <button onClick={() => {setUserModel(false)}} className='btn-logout-dashboard btn-large'>Close</button>
                     </div>
                 </div>
             </div>

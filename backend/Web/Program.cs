@@ -44,6 +44,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IDeviceService, DeviceService>();
 builder.Services.AddScoped<ISummaryService, SummaryService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 //vite Connect
 builder.Services.AddCors(options =>

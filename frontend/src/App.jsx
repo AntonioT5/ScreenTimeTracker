@@ -28,7 +28,8 @@ export default function App(){
 
     localStorage.removeItem('authToken');
     localStorage.removeItem('authUsername');
-    localStorage.removeItem('deviceName')
+    localStorage.removeItem('deviceName');
+    localStorage.removeItem('authMail');
     setView('login');
   }, []);
 
@@ -37,6 +38,28 @@ export default function App(){
     window.history.replaceState({}, '', window.location.pathname);
   };
 
+  const onEditChanges = async (username, mail) =>{
+    const token = localStorage.getItem('authToken');
+    const response = await fetch(`${ApiBackendBase}/user`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        Username: username,
+        Email: mail
+      })
+    });
+
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(message || 'Could not update account');
+    }
+
+    localStorage.setItem('authUsername', username);
+    localStorage.setItem('authMail', mail);
+  }
   return (<>
         {view === 'login' && (
           <LoginPage onSwitchToRegister={() => setView('register')} onSwitchToDashboard={() => setView('dashboard')}/>
@@ -51,11 +74,7 @@ export default function App(){
         )}
 
         {view === 'dashboard' && !pendingCode && (
-          <Dashboard onLogout={handleLogout} onClickDevice={() => {setView('device')}}/>
-        )}
-
-        {view === 'device' && (
-          <Dashboard onClickDashboard={() => {setView('dashboard')}}/>
+          <Dashboard onLogout={handleLogout} onClickDevice={() => {setView('device')}} onEditChanges={onEditChanges}/>
         )}
   </>);
 }

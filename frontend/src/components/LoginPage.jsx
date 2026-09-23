@@ -29,7 +29,8 @@ export default function LoginPage({ onSwitchToRegister, onSwitchToDashboard }){
             const data = await response.json();
             localStorage.setItem('authToken', data.token);
             localStorage.setItem('authUsername', data.username);
-
+            localStorage.setItem('authMail', data.mail);
+            
             console.log('Logged in! Token saved.');
 
             onSwitchToDashboard();

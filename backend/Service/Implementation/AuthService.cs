@@ -39,6 +39,7 @@ namespace Service.Implementation
             {
                 Token = token,
                 Username = user.Username,
+                Mail = user.Email
             };
         }
 

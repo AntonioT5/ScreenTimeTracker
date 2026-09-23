@@ -104,7 +104,7 @@ namespace Service.Implementation
                 throw new ArgumentException("Invalid device data.");
             }
 
-            _cache.Set($"pending-device:{request.Code}", new PendingDevice { DeviceName = name, OperatingSystem = os }, TimeSpan.FromMinutes(10));
+            _cache.Set($"pending-device:{request.Code}", new PendingDevice { DeviceName = name, OperatingSystem = os }, TimeSpan.FromMinutes(1));
         }
 
         public PendingDeviceInfo? GetPendingInfo(string code)
