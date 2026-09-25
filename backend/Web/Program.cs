@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Repository;
 using Repository.Implementation;
 using Repository.Interface;
+using Service.BackgroundJob;
 using Service.Common;
 using Service.Implementation;
 using Service.Interface;
@@ -52,6 +53,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
         policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod());
 });
+
+//backgroundJob
+builder.Services.AddHostedService<DailyAggregationJob>();
 
 //controllers
 builder.Services.AddControllers() 

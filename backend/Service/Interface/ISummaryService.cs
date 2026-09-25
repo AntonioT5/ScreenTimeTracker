@@ -9,5 +9,9 @@ namespace Service.Interface
     public interface ISummaryService
     {
         Task<SummaryResponse> GetSummaryAsync(Guid userId, int? days);
+
+        Task AggregateDailyAsync(DateTime date);
+        Task<DateTime?> GetFirstSessionDateAsync();
+        Task<DateOnly?> GetLastAggregatedDateAsync();
     }
 }

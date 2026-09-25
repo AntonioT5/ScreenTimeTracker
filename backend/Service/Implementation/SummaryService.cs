@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.Entities;
+using Microsoft.Extensions.Logging;
 using Repository.Interface;
 using Service.DTOs.RequestResponse;
 using Service.Interface;
@@ -12,10 +13,72 @@ namespace Service.Implementation
     public class SummaryService : ISummaryService
     {
         private readonly IRepository<AppSession> _sessionRepository;
+        private readonly IRepository<DailySummary> _summaryRepository;
+        private readonly ILogger<SummaryService> _logger;
 
-        public SummaryService(IRepository<AppSession> sessionRepository)
+        public SummaryService(IRepository<AppSession> sessionRepository, IRepository<DailySummary> summaryRepository, ILogger<SummaryService> logger)
         {
             _sessionRepository = sessionRepository;
+            _summaryRepository = summaryRepository;
+            _logger = logger;
+        }
+
+        public async Task AggregateDailyAsync(DateTime date)
+        {
+            var dateOnly = DateOnly.FromDateTime(date.Date);
+
+            var alreadyExists = await _summaryRepository.Get(
+                selector: s => s.Id,
+                predicate: s => s.Date == dateOnly);
+
+            if (alreadyExists != Guid.Empty)
+            {
+                _logger.LogInformation("Skipping {Date}, already aggregated", dateOnly);
+                return;
+            }
+
+            var dayStart = DateTime.SpecifyKind(date.Date, DateTimeKind.Utc);
+            var dayEnd = dayStart.AddDays(1);
+
+            var raw = await _sessionRepository.GetAllAsync(
+                selector: s => new
+                {
+                    UserId = s.Device.UserId,
+                    s.ProcessName,
+                    s.StartTime,
+                    s.EndTime
+                },
+                predicate: s => s.StartTime >= dayStart && s.StartTime < dayEnd);
+
+            var grouped = raw
+                .GroupBy(s => new { s.UserId, s.ProcessName })
+                .Select(g => new DailySummary
+                {
+                    UserId = g.Key.UserId,
+                    ProcessName = g.Key.ProcessName,
+                    Date = dateOnly,
+                    DurationSeconds = (int)g.Sum(s => (s.EndTime - s.StartTime).TotalSeconds)
+                })
+                .ToList();
+
+            if (grouped.Count > 0)
+            {
+                await _summaryRepository.InsertManyAsync(grouped);
+            }
+        }
+
+        public async Task<DateTime?> GetFirstSessionDateAsync()
+        {
+            return await _sessionRepository.Get(
+                selector: s => (DateTime?)s.StartTime,
+                orderBy: q => q.OrderBy(s => s.StartTime));
+        }
+
+        public async Task<DateOnly?> GetLastAggregatedDateAsync()
+        {
+            return await _summaryRepository.Get(
+                selector: s => (DateOnly?)s.Date,
+                orderBy: q => q.OrderByDescending(s => s.Date));
         }
 
         public async Task<SummaryResponse> GetSummaryAsync(Guid userId, int? days)
@@ -72,5 +135,7 @@ namespace Service.Implementation
                 .ToList();
             return new SummaryResponse { Overall = overall, ByDevice = byDevice, TotalTimeSpend=totalTimeSpend };
         }
+
+        
     }
 }
