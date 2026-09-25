@@ -17,6 +17,7 @@ namespace Repository
         public DbSet<Device> Devices { get; set; } = null!;
         public DbSet<AppSession> AppSessions { get; set; } = null!;
         public DbSet<DailySummary> DailySummaries { get; set; } = null!;
+        public DbSet<Prediction> Predictions { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,6 +41,10 @@ namespace Repository
 
             modelBuilder.Entity<AppSession>()
                 .HasIndex(a => new {a.DeviceId, a.StartTime})
+                .IsUnique();
+
+            modelBuilder.Entity<Prediction>()
+                .HasIndex(p => new { p.UserId, p.PredictionForDate })
                 .IsUnique();
         }
     }
