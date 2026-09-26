@@ -11,7 +11,7 @@ namespace Domain.Entities
         public DateOnly PredictionForDate { get; set; }
         public int PredictedTotalSeconds { get; set; }
         public string PredictedTopApp { get; set; } = string.Empty;
-        public DateTime GeneretedAt { get; set; }
+        public DateTime GeneratedAt { get; set; }
 
         public Guid UserId { get; set; }
         public User User { get; set; } = null!;

@@ -46,12 +46,19 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IDeviceService, DeviceService>();
 builder.Services.AddScoped<ISummaryService, SummaryService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPredictionService, PredictionService>();
 
 //vite Connect
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
         policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod());
+});
+
+//ml-service
+builder.Services.AddHttpClient("MlService", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:8000");
 });
 
 //backgroundJob
