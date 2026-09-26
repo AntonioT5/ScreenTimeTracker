@@ -83,7 +83,7 @@ namespace Service.Implementation
 
         public async Task<SummaryResponse> GetSummaryAsync(Guid userId, int? days)
         {
-            DateTime? passDays = days.HasValue ? DateTime.UtcNow.AddDays(-days.Value) : null;
+            DateTime? passDays = days.HasValue ? DateTime.UtcNow.Date.AddDays(-(days.Value-1)) : null;
         
             var raw = await _sessionRepository.GetAllAsync(
                 selector: s => new
