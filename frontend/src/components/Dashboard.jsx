@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { authFetch } from '../api_JWTToken/api';
 import './Dashboard.css';
 
 export default function Dashboard({ onLogout, onEditChanges }){
@@ -11,12 +10,15 @@ export default function Dashboard({ onLogout, onEditChanges }){
     const mail = localStorage.getItem('authMail')
     const [editUsername, setEditUsername] = useState(username);
     const [editMail, setEditMail] = useState(mail);
+    const [prediction, setPrediction] = useState(null);
 
     const [days, setDays] = useState(1);
     const [logoutFlag, setLogoutFlag] = useState(false);
     const [deviceFlag, setDeviceFlag] = useState(false);
     const [userModel, setUserModel] = useState(false);
+    const [predictionFlag, setPredictionFlag] = useState("notClicked");
     const [editError, setEditError] = useState('');
+    const [activeMenu, setActiveMenu] = useState("dashboard");
 
     const ApiBackendBase = 'http://localhost:5027/api'
     const token = localStorage.getItem('authToken')
@@ -69,6 +71,31 @@ export default function Dashboard({ onLogout, onEditChanges }){
         return `${hours}:${formattedMinutes}`
     } 
 
+    const loadPrediciton = async () => {
+        setPredictionFlag("waiting")
+
+        try{
+            const response = await fetch(`${ApiBackendBase}/prediction/generate`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if(!response.ok){
+                throw new Error('You need at least 7 days for prediction. Try again latter.');
+            }
+            const data = await response.json();
+            setPrediction(data);
+            setPredictionFlag("clicked")
+        }catch (err) {
+            console.error(err);
+            setPredictionFlag("error")
+            setError(err.message);
+        }
+    }
+
 
     return(
         <div className="dashboard-container">
@@ -84,20 +111,20 @@ export default function Dashboard({ onLogout, onEditChanges }){
                     </div>
                 </div>
                 
-                <div className={`settings-card ${days===1 ? 'active' : ''}`} onClick={() => setDays(1)}>
+                <div className={`settings-card ${activeMenu === "dashboard" ? "active" : ""}`} onClick={() => {setActiveMenu("dashboard"); setDays(1);}}>
                     <span>Dashboard</span>
                 </div>
 
-                <div className={`settings-card ${days===7 ? 'active' : ''}`} onClick={() => setDays(7)}>
+                <div className={`settings-card ${activeMenu === "7days" ? "active" : ""}`} onClick={() => {setActiveMenu("7days"); setDays(7);}}>
                     <span>Dashboard for 7 days</span>
                 </div>
 
-                <div className={`settings-card ${days===30 ? 'active' : ''}`} onClick={() => setDays(30)}>
+                <div className={`settings-card ${activeMenu === "30days" ? "active" : ""}`} onClick={() => {setActiveMenu("30days"); setDays(30);}}>
                     <span>Dashboard for 30 days</span>
                 </div>
 
-                <div className='settings-card'>
-                    <a  href=''>Predictions</a>
+                <div className={`settings-card ${activeMenu === "prediction" ? "active" : ""}`} onClick={()=>{setActiveMenu("prediction"); loadPrediciton();}}>
+                    <span>Predictions</span>
                 </div>
 
                 <div className='settings-card'>
@@ -160,6 +187,43 @@ export default function Dashboard({ onLogout, onEditChanges }){
                     <div className='buttons-area'>
                         <button onClick={onLogout} className='btn-logout-dashboard'>Yes</button>
                         <button onClick={() => {setLogoutFlag(false)}} className='btn-logout-dashboard'>No</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style={{display: predictionFlag === "notClicked" ? 'none' : 'flex'}}  className='model-prediction' onClick={() => setPredictionFlag("notClicked")}>
+                <div onClick={(e) => e.stopPropagation()}>
+                    <div>
+                        <p className='p1'>Tomorrow's Predictions</p>
+
+                        {predictionFlag === "waiting" && <p className='loading'>Loading data...</p>} 
+                        {predictionFlag === "error" && <p className='loading'>Something went worng. Try again latter</p>} 
+                        {predictionFlag === "clicked" && 
+                            <div className='prediction-container'>
+                                {prediction.mostUsedApp !== "none" ?
+                                    <><div className='prediction-element'>
+                                        <p>Screen time</p>
+                                        <p>{convertTime(prediction.totalScreenTime)}</p>
+                                    </div>
+                                    <div className='prediction-element'>
+                                        <p>Top app</p>
+                                        <p>{prediction.mostUsedApp}</p>
+                                    </div></> :
+                                        <>
+                                            <div className='result-predicition'>
+                                                <p>Tomorrow is you rest day. 0 Screen time</p>
+                                            </div>
+                                        </>
+                                }     
+                            </div>                
+                        } 
+
+                        <div className='buttons-area'>
+                            <button onClick={() => {setPredictionFlag("notClicked"); setActiveMenu("dashboard"); setDays(1);}} className='btn-logout-dashboard btn-large'>Close</button>
+                        </div>
+                        <div>
+                            <p className='waring-prediction'>This is only a prediciton and may not be accurate.</p>
+                        </div>
                     </div>
                 </div>
             </div>

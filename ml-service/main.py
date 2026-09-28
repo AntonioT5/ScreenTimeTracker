@@ -23,6 +23,7 @@ def predict(request: PredicitonRequest):
 
     try:
         prediction_date, total_seconds, top_app = predict_tomorrow(user_id, request.history)
+        print(prediction_date)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="No trained model for this user yet")
 

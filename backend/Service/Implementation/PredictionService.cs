@@ -9,6 +9,7 @@ using Service.Interface;
 using System.Net.Http;
 using Service.DTOs.RequestResponse;
 using System.Net.Http.Json;
+using Service.Exceptions;
 
 namespace Service.Implementation
 {
@@ -25,7 +26,7 @@ namespace Service.Implementation
             _httpClientFactory = httpClientFactory;
             _logger = logger;
         }
-        public async Task GeneratePredictionAsync(Guid userId)
+        public async Task<PredictionResponse?> GeneratePredictionAsync(Guid userId)
         {
             var since = DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-7));
 
@@ -39,7 +40,7 @@ namespace Service.Implementation
             if(rowList.Count == 0)
             {
                 _logger.LogInformation("No history for user {userid}, skipping prediciton", userId);
-                return;
+                return null;
             }
             var history = rowList.GroupBy(r=>r.Date)
                 .Select(g=> new DailyRecordDto
@@ -60,6 +61,9 @@ namespace Service.Implementation
                 History = history
             };
 
+            var clientTrain = _httpClientFactory.CreateClient("MlService");
+            var httpResponseTrain = await clientTrain.PostAsync("/train", null);
+
             var client = _httpClientFactory.CreateClient("MlService");
             var httpResponse = await client.PostAsJsonAsync("/predict", request);
 
@@ -67,32 +71,35 @@ namespace Service.Implementation
             {
                 var errorBody = await httpResponse.Content.ReadAsStringAsync();
                 _logger.LogError("Prediction request failed for {UserId}: {Status} - {Body}", userId, httpResponse.StatusCode, errorBody);
-                return;
+                throw new NotEnoughHistoryException("You need at least 7 days for prediction. Try again latter.");
             }
 
             var result = await httpResponse.Content.ReadFromJsonAsync<PredictionResponseDto>();
-            if (result is null) return;
+            if (result is null) return null;
 
             var alreadyExists = await _predictionRepository.Get(
-                selector: p => p.Id,
+                selector: p => p,
                 predicate: p => p.UserId == userId && p.PredictionForDate == result.PredictionForDate);
 
-            if (alreadyExists != Guid.Empty)
+            if (alreadyExists is not null)
             {
                 _logger.LogInformation("Prediction already exists for {UserId} on {Date}", userId, result.PredictionForDate);
-                return;
+                return new PredictionResponse{TotalScreenTime = alreadyExists.PredictedTotalSeconds, MostUsedApp=alreadyExists.PredictedTopApp};;
             }
 
-            await _predictionRepository.InsertAsync(new Prediction
+            var prediciton = new Prediction
             {
                 UserId = userId,
                 PredictionForDate = result.PredictionForDate,
                 PredictedTotalSeconds = result.PredictedTotalSeconds,
                 PredictedTopApp = result.PredictedTopApp,
                 GeneratedAt = DateTime.UtcNow
-            });
+            };
+
+            await _predictionRepository.InsertAsync(prediciton);
 
             _logger.LogInformation("Saved prediction for {UserId} on {Date}", userId, result.PredictionForDate);
+            return new PredictionResponse{TotalScreenTime = result.PredictedTotalSeconds, MostUsedApp=result.PredictedTopApp};
         }
     }
 }

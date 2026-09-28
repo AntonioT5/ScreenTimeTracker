@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Service.Exceptions;
 using Service.Interface;
 
 namespace Web.Controller
@@ -27,9 +28,14 @@ namespace Web.Controller
             {
                 return Unauthorized();
             }
-
-            await _predictionService.GeneratePredictionAsync(userId);
-            return Ok();
+            try
+            {
+                var prediction = await _predictionService.GeneratePredictionAsync(userId);
+                return Ok(prediction);
+            }catch(NotEnoughHistoryException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
     }
 }

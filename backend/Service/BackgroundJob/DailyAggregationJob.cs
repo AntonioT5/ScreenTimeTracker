@@ -75,8 +75,20 @@ namespace Service.BackgroundJob
             {
                 if (stoppingToken.IsCancellationRequested) break;
 
-                await summaryService.AggregateDailyAsync(d);
-                _logger.LogInformation("Caught up day: {Date}", d);
+                try
+                {
+                    await summaryService.AggregateDailyAsync(d);
+                    _logger.LogInformation(
+                        "Caught up day: {Date}",
+                        d);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(
+                        ex,
+                        "Failed to aggregate day {Date}",
+                        d);
+                }
             }
         }
     }

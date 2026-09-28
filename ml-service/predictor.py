@@ -11,4 +11,4 @@ def predict_tomorrow(user_id, history):
     total_seconds = int(max(0, regressor.predict(pred_features)[0]))
     top_app = str(classifier.predict(pred_features)[0])
 
-    return tomorrow.date(), total_seconds, top_app
+    return tomorrow, total_seconds, top_app

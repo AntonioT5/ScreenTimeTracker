@@ -1,5 +1,5 @@
 import pandas as pd
-from datetime import timedelta
+from datetime import date, timedelta
 
 def build_daily_dataframe(history: list) -> pd.DataFrame:
     rows = []
@@ -41,8 +41,7 @@ def fill_missing_days(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def build_prediction_features(df: pd.DataFrame):
-    last_date = df["date"].max()
-    tomorrow = last_date + timedelta(days=1)
+    tomorrow = date.today() + timedelta(days=1)
 
     tomorrow_day_of_week = pd.Timestamp(tomorrow).dayofweek
     previous_day_total = df.iloc[-1]["total_seconds"]
